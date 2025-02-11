@@ -1,89 +1,30 @@
+let carousel = document.querySelector(".carousel");
+let allRadios = carousel.querySelectorAll(".carousel-radio");
 
-let food = document.querySelector('.food');
+let prevBtn = carousel.querySelector(".prev");
+let nextBtn = carousel.querySelector(".next");
 
-let indian = document.querySelector('#indian')
-let american = document.querySelector('#american')
-let canadian = document.querySelector('#canadian')
-let thai = document.querySelector('#thai')
-let british = document.querySelector('#british')
-let russian = document.querySelector('#russian')
+let allRadiosArray = [...allRadios];
 
+const makeActive = index => allRadiosArray[index].checked = true;
 
-let recipe;
+function makeNextRadioActive() {
+    let activeRadioIndex = allRadiosArray.findIndex(radio => radio.checked);
+    let makeActiveIndex = activeRadioIndex + 1;
+    if (makeActiveIndex >= allRadiosArray.length) {
+        makeActiveIndex -= allRadiosArray.length;
+    }
+    makeActive(makeActiveIndex);
+}
 
-const fetchData = async (area) =>{
-const api = await fetch(
-    `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
-);
+function makePrevRadioActive() {
+    let activeRadioIndex = allRadiosArray.findIndex(radio => radio.checked);
+    let makeActiveIndex = activeRadioIndex - 1;
+    if (makeActiveIndex < 0) {
+        makeActiveIndex += allRadiosArray.length;
+    }
+    makeActive(makeActiveIndex);
+}
 
-const data = await api.json();
-
-recipe = data.meals;
-
-// console.log("my recipe = ", recipe)
-
-showData(recipe);
-
- };
-
-const searchRecipe = ()=>{
-    let input = document.querySelector('#search');
-
-    input.addEventListener('keydown', async (e)=>{
-        if(e.key==="Enter"){
-            let inputValue = input.value; 
-            const api = await fetch(
-                `https://www.themealdb.com/api/json/v1/1/search.php?s=${inputValue}`
-            );
-            
-            const data = await api.json();
-            
-            recipe = data.meals;
-            showData(recipe); 
-        }
-    });
-};
-
-searchRecipe();
-
- let showData = (recipe)=>{
-    food.innerHTML = recipe
-    .map((meal)=>`
-        <div style="text-align:center">
-        <div>
-        <img src = ${meal.strMealThumb} style="width:220px; border-radius: 10px; border: 2px solid blue" />
-        </div>
-        <h5 style="margin:10px">${meal.strMeal}</h5>
-        </div>
-        `)
-        .join(" ");
- };
-
- american.addEventListener("click", () => {
-    // console.log('button clicked')
-    fetchData("american");
-});
-indian.addEventListener("click", () => {
-    fetchData("indian");
-});
-canadian.addEventListener("click", () => {
-    fetchData("canadian");
-});
-thai.addEventListener("click", () => {
-    fetchData("thai");
-});
-british.addEventListener("click", () => {
-    fetchData("british");
-});
-russian.addEventListener("click", () => {
-    fetchData("russian");
-});
-
-fetchData('indian')
-
-
-    
-
-
-
-
+prevBtn.addEventListener("click", makePrevRadioActive);
+nextBtn.addEventListener("click", makeNextRadioActive);
